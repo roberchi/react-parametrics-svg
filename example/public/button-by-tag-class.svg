@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+       viewBox="0 0 210 40" width="100%" height="100%">
+
+    <title>Reusable Button</title>
+    <desc>Takes parameters from parent document"s embedding element.</desc>
+
+    <defs id="params">
+      <param id="paramRound" param="corners" default="15"/>
+      <param id="paramBorder" param="color" default="red"/>
+      <param id="paramText" param="text-label" default="button"/>
+      <param id="paramStroke" param="outline" default="navy"/>
+      <param id="paramFontSize" param="font-size" default="10"/>
+    </defs>
+    <defs id="params-map">
+      <paramMap target="rect" param="color" attributeName="fill"/>
+      <paramMap target="rect" param="outline" attributeName="stroke"/>
+      <paramMap target="rect" param="corners" attributeName="rx"/>
+      <paramMap target="rect" param="corners" attributeName="ry"/>
+      <paramMap target=".label" param="font-size" attributeName="font-size"/>
+      <paramMap target=".label" param="text-label"/>
+    </defs>
+
+    <g>
+      <rect id="button_rect" x="5" y="5" width="100" height="30" rx="15" ry="15" 
+            fill="blue" stroke="navy" />
+      <text class="label" id="button_label" x="55" y="30" text-anchor="middle" 
+            font-size="25" fill="black" font-family="Verdana"> </text>
+    </g>
+    <g>
+      <rect id="button_rect" x="105" y="5" width="100" height="30" rx="15" ry="15" 
+            fill="blue" stroke="navy" />
+      <text class="label" id="button_label" x="155" y="30" text-anchor="middle" 
+            font-size="25" fill="black" font-family="Verdana"> </text>
+    </g>
+  </svg>
