@@ -1,10 +1,10 @@
 {
   "name": "react-parametrics-svg",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is an extension of react-svg to support parameters with SVG",
-  "author": "Roberto Chinelli",
+  "author": "Roberto Chinelli (roberto.chinelli@gmail.com",
   "license": "MIT",
-  "repository": "roberchi\react-parametrics-svg",
+  "repository": "roberchi/react-parametrics-svg",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.tsx",
