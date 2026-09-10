@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 430" width="360" height="430">
+  <defs>
+    <!-- Parametri: d=diametro(mm) L=lunghezza(mm) b=filetto(mm) scale=px/mm -->
+    <param param="d" default="12"/>
+    <param param="L" default="80"/>
+    <param param="b" default="28"/>
+    <param param="scale" default="2.2"/>
+
+    <!-- HEAD (testa bullone) cx=180 bearingY=130 -->
+    <paramMap target="#head" attributeName="x"      expr="180 - d*1.6/2*scale"/>
+    <paramMap target="#head" attributeName="y"      expr="130 - d*0.64*scale"/>
+    <paramMap target="#head" attributeName="width"  expr="d*1.6*scale"/>
+    <paramMap target="#head" attributeName="height" expr="d*0.64*scale"/>
+
+    <!-- SHAFT (gambo liscio) y=130 hardcoded -->
+    <paramMap target="#shaft" attributeName="x"      expr="180 - d/2*scale"/>
+    <paramMap target="#shaft" attributeName="width"  expr="d*scale"/>
+    <paramMap target="#shaft" attributeName="height" expr="(L-b)*scale"/>
+
+    <!-- THREAD (filetto) -->
+    <paramMap target="#thread" attributeName="x"      expr="180 - d/2*scale"/>
+    <paramMap target="#thread" attributeName="y"      expr="130 + (L-b)*scale"/>
+    <paramMap target="#thread" attributeName="width"  expr="d*scale"/>
+    <paramMap target="#thread" attributeName="height" expr="b*scale"/>
+
+    <!-- CENTER LINE y1,y2 dinamici, x1=x2=180 hardcoded -->
+    <paramMap target="#cline" attributeName="y1" expr="130 - d*0.64*scale - 25"/>
+    <paramMap target="#cline" attributeName="y2" expr="130 + L*scale + 25"/>
+
+    <!-- LABEL s (sopra testa) -->
+    <paramMap target="#lbl-s" attributeName="y"       expr="130 - d*0.64*scale - 8"/>
+    <paramMap target="#lbl-s"                          expr="`s = ${Math.round(d*1.6)} mm`"/>
+
+    <!-- DIM LINE L (destra) -->
+    <paramMap target="#dim-L"   attributeName="x1"    expr="180 + d*1.6/2*scale + 14"/>
+    <paramMap target="#dim-L"   attributeName="x2"    expr="180 + d*1.6/2*scale + 14"/>
+    <paramMap target="#dim-L"   attributeName="y2"    expr="130 + L*scale"/>
+    <paramMap target="#tL1"     attributeName="x1"    expr="180 + d*1.6/2*scale + 9"/>
+    <paramMap target="#tL1"     attributeName="x2"    expr="180 + d*1.6/2*scale + 19"/>
+    <paramMap target="#tL2"     attributeName="x1"    expr="180 + d*1.6/2*scale + 9"/>
+    <paramMap target="#tL2"     attributeName="x2"    expr="180 + d*1.6/2*scale + 19"/>
+    <paramMap target="#tL2"     attributeName="y1"    expr="130 + L*scale"/>
+    <paramMap target="#tL2"     attributeName="y2"    expr="130 + L*scale"/>
+    <paramMap target="#lbl-L"   attributeName="x"     expr="180 + d*1.6/2*scale + 22"/>
+    <paramMap target="#lbl-L"   attributeName="y"     expr="130 + L/2*scale"/>
+    <paramMap target="#lbl-L"                         expr="`L = ${L} mm`"/>
+
+    <!-- DIM LINE b (sinistra) -->
+    <paramMap target="#dim-b"   attributeName="x1"    expr="180 - d*1.6/2*scale - 14"/>
+    <paramMap target="#dim-b"   attributeName="x2"    expr="180 - d*1.6/2*scale - 14"/>
+    <paramMap target="#dim-b"   attributeName="y1"    expr="130 + (L-b)*scale"/>
+    <paramMap target="#dim-b"   attributeName="y2"    expr="130 + L*scale"/>
+    <paramMap target="#tb1"     attributeName="x1"    expr="180 - d*1.6/2*scale - 19"/>
+    <paramMap target="#tb1"     attributeName="x2"    expr="180 - d*1.6/2*scale - 9"/>
+    <paramMap target="#tb1"     attributeName="y1"    expr="130 + (L-b)*scale"/>
+    <paramMap target="#tb1"     attributeName="y2"    expr="130 + (L-b)*scale"/>
+    <paramMap target="#tb2"     attributeName="x1"    expr="180 - d*1.6/2*scale - 19"/>
+    <paramMap target="#tb2"     attributeName="x2"    expr="180 - d*1.6/2*scale - 9"/>
+    <paramMap target="#tb2"     attributeName="y1"    expr="130 + L*scale"/>
+    <paramMap target="#tb2"     attributeName="y2"    expr="130 + L*scale"/>
+    <paramMap target="#lbl-b"   attributeName="x"     expr="180 - d*1.6/2*scale - 22"/>
+    <paramMap target="#lbl-b"   attributeName="y"     expr="130 + (L - b/2)*scale"/>
+    <paramMap target="#lbl-b"                         expr="`b = ${b} mm`"/>
+
+    <!-- SPEC TEXT in basso -->
+    <paramMap target="#spec"    attributeName="y"     expr="130 + L*scale + 40"/>
+    <paramMap target="#spec"                          expr="`M${d}×${L}  ·  s=${Math.round(d*1.6)}  ·  k=${(d*0.64).toFixed(1)}  ·  scale=${scale} px/mm`"/>
+  </defs>
+
+  <!-- Hatch pattern per filetto -->
+  <pattern id="bolt-hatch" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+    <line x1="0" y1="0" x2="0" y2="5" stroke="#6070a0" stroke-width="2.2"/>
+  </pattern>
+
+  <!-- Linea centrale tratteggiata -->
+  <line id="cline" x1="180" x2="180" y1="80" y2="320"
+        stroke="#4488cc" stroke-width="0.8" stroke-dasharray="8,4" opacity="0.55"/>
+
+  <!-- Testa esagonale (vista laterale = rettangolo) -->
+  <rect id="head" x="158" y="113" width="44" height="17"
+        fill="#c8a030" stroke="#705000" stroke-width="1.5" rx="1.5"/>
+
+  <!-- Gambo (liscio) -->
+  <rect id="shaft" x="174" y="130" width="12" height="114"
+        fill="#b8c0d0" stroke="#607090" stroke-width="1"/>
+
+  <!-- Filettatura -->
+  <rect id="thread" x="174" y="244" width="12" height="62"
+        fill="url(#bolt-hatch)" stroke="#607090" stroke-width="1"/>
+
+  <!-- Etichetta s (sopra testa, centrata) -->
+  <text id="lbl-s" x="180" y="98"
+        font-size="11" fill="#c8a030" font-family="monospace"
+        text-anchor="middle" font-weight="600">s = 19 mm</text>
+
+  <!-- Quota L (destra) -->
+  <line id="dim-L"  x1="216" x2="216" y1="130" y2="306" stroke="#4488cc" stroke-width="1"/>
+  <line id="tL1"    x1="211" x2="221" y1="130" y2="130" stroke="#4488cc" stroke-width="1"/>
+  <line id="tL2"    x1="211" x2="221" y1="306" y2="306" stroke="#4488cc" stroke-width="1"/>
+  <text id="lbl-L"  x="238" y="218"
+        font-size="11" fill="#4488cc" font-family="monospace"
+        text-anchor="start" dominant-baseline="middle">L = 80 mm</text>
+
+  <!-- Quota b (sinistra) -->
+  <line id="dim-b" x1="144" x2="144" y1="244" y2="306" stroke="#44aa44" stroke-width="1"/>
+  <line id="tb1"   x1="139" x2="149" y1="244" y2="244" stroke="#44aa44" stroke-width="1"/>
+  <line id="tb2"   x1="139" x2="149" y1="306" y2="306" stroke="#44aa44" stroke-width="1"/>
+  <text id="lbl-b" x="142" y="275"
+        font-size="11" fill="#44aa44" font-family="monospace"
+        text-anchor="end" dominant-baseline="middle">b = 28 mm</text>
+
+  <!-- Spec text in basso -->
+  <text id="spec" x="180" y="346"
+        font-size="10" fill="#888" font-family="monospace"
+        text-anchor="middle">M12×80  ·  s=19  ·  k=7.7  ·  scale=2.2 px/mm</text>
+</svg>

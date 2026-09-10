@@ -132,10 +132,49 @@ If your environment prohibits `unsafe-eval`, replace the body of
 [`expr-eval`](https://www.npmjs.com/package/expr-eval) package) — the
 public interface does not change.
 
-In the folder /example you find a full featured react application:
-![Test app](./img/app-test.PNG)
+## Demo
+
+The `/example` folder contains a full-featured interactive demo built with **Vite + React 18 + MUI 5**.  
+Run it locally:
+
+```bash
+cd example
+npm install --legacy-peer-deps
+npm run dev        # → http://localhost:5173/
+```
+
+### Tab 1 — Bolt CAD parametrico
+
+Parametric bolt drawing driven entirely by `expr` expressions inside the SVG.  
+Sliders for `d` (diameter), `L` (length), `b` (thread length), `scale` (px/mm) update the drawing in real time.  
+The **ESPRESSIONI** panel mirrors every live-computed value so you can see exactly what each `<paramMap expr="...">` evaluates to.
+
+![Bolt CAD parametrico](./docs/screenshots/tab-bolt.png)
+
+### Tab 2 — Button (param scalare)
+
+Three variants of the same button SVG demonstrating:
+- scalar `param` lookup via object props
+- `#id` and `.class` selectors
+- `paramsMap` passed from the React component instead of the SVG file
+
+![Button param scalare](./docs/screenshots/tab-button.png)
+
+### Tab 3 — Animazione
+
+Toggle-based SVG animation controlled via `paramsMap` prop with live code snippet.
+
+![Animazione](./docs/screenshots/tab-anim.png)
 
 ## Changelog
+
+### 1.2.0
+
+- **demo:** rewritten example app — Vite 5 + React 18 + MUI 5 (replaced Create React App + Fluent UI)
+- **demo:** three tabs: parametric bolt CAD, button variants, animated SVG
+- **demo:** `bolt.svg` — fully parametric bolt drawing with 40+ `<paramMap expr="...">` expressions covering geometry, dimension lines, and text labels
+- **example:** `vite.config.ts` with alias `react-parametrics-svg → ../src/index.tsx` for zero-build development
+- **ci:** `predeploy` updated for `--legacy-peer-deps` npm install
 
 ### 1.1.0
 
