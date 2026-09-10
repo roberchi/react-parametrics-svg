@@ -2,6 +2,7 @@ import _, { isEqual, union } from 'lodash'
 import React from 'react'
 // eslint-disable-next-line no-unused-vars
 import { Props, ReactSVG } from 'react-svg'
+import { evalExpr } from './expr-eval'
 
 /*
 
@@ -11,9 +12,40 @@ interface IParam {
   value: string | undefined | null
 }
 
+/**
+ * Maps a parameter (or expression) to an SVG element attribute.
+ *
+ * Exactly one of `param` or `expr` must be present.
+ * If both are present, `expr` takes precedence.
+ */
 interface IParamMap {
-  param: string
+  /** CSS selector for the target SVG element(s). */
   target: string
+
+  /**
+   * Name of a parameter from the `params` object.
+   * The value is written to `attributeName` as-is (scalar lookup).
+   * Mutually exclusive with `expr`; `expr` takes precedence if both are set.
+   */
+  param?: string
+
+  /**
+   * JavaScript expression evaluated in the context of all current `params`.
+   * Each key of `params` is available as a local variable.
+   *
+   * Examples:
+   *   - `"cx - headWidth / 2 * scale"`
+   *   - "`L = ${length} mm`"   (template literal)
+   *   - `"Math.max(a, b)"`
+   *
+   * Takes precedence over `param` if both are present.
+   */
+  expr?: string
+
+  /**
+   * SVG attribute name to set on the target element(s).
+   * If omitted, the value is written to `element.innerHTML` instead.
+   */
   attributeName?: string | undefined | null
 }
 interface IParametricsSVGProps extends Props {
@@ -84,11 +116,13 @@ export class ReactParametricsSVG extends React.Component<IParametricsSVGProps> {
         const targetId =
           paramsMap[i].attributes.getNamedItem('target')?.nodeValue
         const param = paramsMap[i].attributes.getNamedItem('param')?.nodeValue
+        const expr = paramsMap[i].attributes.getNamedItem('expr')?.nodeValue
         const attributeName =
           paramsMap[i].attributes.getNamedItem('attributeName')?.nodeValue
-        if (targetId && param)
+        if (targetId && (param || expr))
           map.push({
-            param: param,
+            param: param ?? undefined,
+            expr: expr ?? undefined,
             target: targetId,
             attributeName: attributeName
           })
@@ -96,28 +130,67 @@ export class ReactParametricsSVG extends React.Component<IParametricsSVGProps> {
     }
     if (props.paramsMap) map = union(map, props.paramsMap) // merge maps
 
+    // build a flat params record for expr evaluation
+    const paramsRecord: Record<string, string | number> = {}
+    preparedParams.forEach((p) => {
+      if (p.name !== undefined && p.value !== undefined && p.value !== null) {
+        const num = Number(p.value)
+        paramsRecord[p.name] = isNaN(num) ? p.value : num
+      }
+    })
+
     // update SVG
     map.forEach((m) => {
-      const param = preparedParams.find((p) => p.name === m.param)
-      if (param) {
+      if (m.expr !== undefined) {
+        // expr path: evaluate expression against all params
+        const value = evalExpr(m.expr, paramsRecord)
+        const syntheticParam: IParam = { name: '', value: String(value) }
         if (m.target.startsWith('#'))
           this.updateElement(
             this.svg?.getElementById(m.target.substring(1)),
             m,
-            param
+            syntheticParam
           )
         else if (m.target.startsWith('.'))
           this.updateElements(
             this.svg?.getElementsByClassName(m.target.substring(1)),
             m,
-            param
+            syntheticParam
           )
         else
           this.updateElements(
             this.svg?.getElementsByTagName(m.target),
             m,
-            param
+            syntheticParam
           )
+      } else if (m.param !== undefined) {
+        // param path: scalar lookup (existing behaviour — unchanged)
+        const param = preparedParams.find((p) => p.name === m.param)
+        if (param) {
+          if (m.target.startsWith('#'))
+            this.updateElement(
+              this.svg?.getElementById(m.target.substring(1)),
+              m,
+              param
+            )
+          else if (m.target.startsWith('.'))
+            this.updateElements(
+              this.svg?.getElementsByClassName(m.target.substring(1)),
+              m,
+              param
+            )
+          else
+            this.updateElements(
+              this.svg?.getElementsByTagName(m.target),
+              m,
+              param
+            )
+        }
+      } else {
+        console.warn(
+          `[react-parametrics-svg] paramMap entry has neither param nor expr`,
+          m
+        )
       }
     })
   }

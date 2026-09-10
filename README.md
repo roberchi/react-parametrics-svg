@@ -83,8 +83,73 @@ e.g.
 ```
 Note the if a map is defined inside the SVG file, it is merged with the mappa passed as attriute ```ReactParametricsSVG```
 
+### Expression evaluation (`expr`)
+
+In addition to the scalar `param` lookup, `<paramMap>` now supports an
+`expr` attribute. The value is a JavaScript expression evaluated at
+render time with all current `params` available as local variables.
+
+```xml
+<defs id="params-map">
+  <!-- scalar lookup (existing behaviour — unchanged) -->
+  <paramMap target="#button_rect" param="corners" attributeName="rx"/>
+
+  <!-- expression: combines multiple params with arithmetic -->
+  <paramMap target="#head"
+            expr="cx - headAcrossFlats / 2 * scale"
+            attributeName="x"/>
+  <paramMap target="#head"
+            expr="headAcrossFlats * scale"
+            attributeName="width"/>
+
+  <!-- template literal — sets element text content (no attributeName) -->
+  <paramMap target="#label"
+            expr="`L = ${length} mm`"/>
+</defs>
+```
+
+The same syntax works in the `paramsMap` prop passed to the component:
+
+```tsx
+<ReactParametricsSVG
+  src="./bolt.svg"
+  params={{ cx: 140, headAcrossFlats: 19, scale: 2.2, length: 100 }}
+  paramsMap={[
+    { target: '#head', expr: 'cx - headAcrossFlats/2 * scale', attributeName: 'x' },
+    { target: '#head', expr: 'headAcrossFlats * scale',        attributeName: 'width' },
+    { target: '#label', expr: '`L = ${length} mm`' },
+  ]}
+/>
+```
+
+**Precedence:** if both `param` and `expr` are present on the same entry,
+`expr` takes precedence.
+
+**CSP note:** expression evaluation uses `new Function`, which requires
+`'unsafe-eval'` in the `script-src` Content Security Policy directive.
+If your environment prohibits `unsafe-eval`, replace the body of
+`src/expr-eval.ts` with a safe parser (e.g. the
+[`expr-eval`](https://www.npmjs.com/package/expr-eval) package) — the
+public interface does not change.
+
 In the folder /example you find a full featured react application:
 ![Test app](./img/app-test.PNG)
+
+## Changelog
+
+### 1.1.0
+
+- **feat:** add `expr` attribute to `<paramMap>` for multi-parameter
+  expression evaluation. Expressions are JavaScript strings evaluated
+  with all current `params` as local variables. Template literals are
+  supported. `expr` takes precedence over `param` when both are present.
+- **types:** `ParamMapEntry.param` is now optional (was implicitly
+  required). Existing usage is unaffected.
+- **docs:** new README section documenting `expr` syntax, prop usage,
+  and CSP note.
+- **tests:** unit tests for `evalExpr`; integration tests for the
+  `expr` path in the component.
+
 ## License
 
 MIT © [Roberto Chinelli](https://github.com/roberchi)
