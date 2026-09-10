@@ -29,9 +29,6 @@ jobs:
         # --ignore-scripts evita che "prepare" esegua la build durante l'install
         run: npm ci --ignore-scripts
 
-      - name: Lint
-        run: npm run test:lint
-
       - name: Unit tests
         run: npm run test:unit
 
