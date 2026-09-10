@@ -91,10 +91,10 @@ export class ReactParametricsSVG extends React.Component<IParametricsSVGProps> {
 
   private loadParamsAndUpdate(props: IParametricsSVGProps) {
     const params = this.svg?.getElementsByTagName('param')
-    var preparedParams: IParam[] = []
+    let preparedParams: IParam[] = []
     if (params && params.length > 0) {
       // prepare params => filter param over definition of the param
-      for (var i = 0; i < params.length; i++) {
+      for (let i = 0; i < params.length; i++) {
         const paramName = params[i].attributes.getNamedItem('param')?.nodeValue
         if (paramName) {
           const defaultValue =
@@ -110,9 +110,9 @@ export class ReactParametricsSVG extends React.Component<IParametricsSVGProps> {
 
     // load map from definition
     const paramsMap = this.svg?.getElementsByTagName('paramMap')
-    var map: IParamMap[] = []
+    let map: IParamMap[] = []
     if (paramsMap) {
-      for (i = 0; i < paramsMap.length; i++) {
+      for (let i = 0; i < paramsMap.length; i++) {
         const targetId =
           paramsMap[i].attributes.getNamedItem('target')?.nodeValue
         const param = paramsMap[i].attributes.getNamedItem('param')?.nodeValue
@@ -201,7 +201,7 @@ export class ReactParametricsSVG extends React.Component<IParametricsSVGProps> {
     param: IParam
   ) {
     if (elems)
-      for (var i = 0; i < elems.length; i++)
+      for (let i = 0; i < elems.length; i++)
         this.updateElement(elems[i], map, param)
   }
 

@@ -17,6 +17,7 @@ describe('evalExpr', () => {
   })
 
   it('evaluates a template literal', () => {
+    // eslint-disable-next-line no-template-curly-in-string
     expect(evalExpr('`L = ${length} mm`', { length: 100 })).toBe('L = 100 mm')
   })
 

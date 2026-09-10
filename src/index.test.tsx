@@ -70,6 +70,7 @@ describe('ReactParametricsSVG expr integration', () => {
     // intercept the setter directly to capture the value without touching the DOM.
     const svg = parseSvg(
       buildSvgString(
+        // eslint-disable-next-line no-template-curly-in-string
         '<paramMap target="#label" expr="`val=${x}`"/>',
         '<text id="label"></text>'
       )
@@ -77,7 +78,9 @@ describe('ReactParametricsSVG expr integration', () => {
     const label = svg.getElementById('label')!
     let capturedHTML = ''
     Object.defineProperty(label, 'innerHTML', {
-      set: (v: string) => { capturedHTML = v },
+      set: (v: string) => {
+        capturedHTML = v
+      },
       get: () => capturedHTML,
       configurable: true
     })

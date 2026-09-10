@@ -31,10 +31,7 @@ export function evalExpr(
       ? Math.round(result * 10000) / 10000
       : String(result)
   } catch (e) {
-    console.warn(
-      `[react-parametrics-svg] expr eval error: "${expr}"`,
-      e
-    )
+    console.warn(`[react-parametrics-svg] expr eval error: "${expr}"`, e)
     return ''
   }
 }
